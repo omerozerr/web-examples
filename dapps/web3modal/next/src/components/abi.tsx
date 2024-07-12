@@ -13,6 +13,29 @@ export default [
         type: "event",
     },
     {
+        inputs: [
+            {
+                internalType: "string",
+                name: "_title",
+                type: "string",
+            },
+            {
+                internalType: "string",
+                name: "_description",
+                type: "string",
+            },
+            {
+                internalType: "uint256",
+                name: "_price",
+                type: "uint256",
+            },
+        ],
+        name: "createOffering",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+    },
+    {
         anonymous: false,
         inputs: [
             {
@@ -42,6 +65,19 @@ export default [
         ],
         name: "DeveloperRegistered",
         type: "event",
+    },
+    {
+        inputs: [
+            {
+                internalType: "uint256",
+                name: "_id",
+                type: "uint256",
+            },
+        ],
+        name: "markOfferingCompleted",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
     },
     {
         anonymous: false,
@@ -139,6 +175,49 @@ export default [
     {
         inputs: [
             {
+                internalType: "uint256",
+                name: "_id",
+                type: "uint256",
+            },
+        ],
+        name: "purchaseOffering",
+        outputs: [],
+        stateMutability: "payable",
+        type: "function",
+    },
+    {
+        inputs: [],
+        name: "registerClient",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+    },
+    {
+        inputs: [
+            {
+                internalType: "string",
+                name: "_name",
+                type: "string",
+            },
+            {
+                internalType: "string",
+                name: "_bio",
+                type: "string",
+            },
+            {
+                internalType: "uint8",
+                name: "_builderScore",
+                type: "uint8",
+            },
+        ],
+        name: "registerDeveloper",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+    },
+    {
+        inputs: [
+            {
                 internalType: "address",
                 name: "",
                 type: "address",
@@ -182,29 +261,6 @@ export default [
             },
         ],
         stateMutability: "view",
-        type: "function",
-    },
-    {
-        inputs: [
-            {
-                internalType: "string",
-                name: "_title",
-                type: "string",
-            },
-            {
-                internalType: "string",
-                name: "_description",
-                type: "string",
-            },
-            {
-                internalType: "uint8",
-                name: "_price",
-                type: "uint8",
-            },
-        ],
-        name: "createOffering",
-        outputs: [],
-        stateMutability: "nonpayable",
         type: "function",
     },
     {
@@ -359,19 +415,6 @@ export default [
         type: "function",
     },
     {
-        inputs: [
-            {
-                internalType: "uint256",
-                name: "_id",
-                type: "uint256",
-            },
-        ],
-        name: "markOfferingCompleted",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-    },
-    {
         inputs: [],
         name: "offeringCount",
         outputs: [
@@ -431,49 +474,6 @@ export default [
             },
         ],
         stateMutability: "view",
-        type: "function",
-    },
-    {
-        inputs: [
-            {
-                internalType: "uint256",
-                name: "_id",
-                type: "uint256",
-            },
-        ],
-        name: "purchaseOffering",
-        outputs: [],
-        stateMutability: "payable",
-        type: "function",
-    },
-    {
-        inputs: [],
-        name: "registerClient",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-    },
-    {
-        inputs: [
-            {
-                internalType: "string",
-                name: "_name",
-                type: "string",
-            },
-            {
-                internalType: "string",
-                name: "_bio",
-                type: "string",
-            },
-            {
-                internalType: "uint8",
-                name: "_builderScore",
-                type: "uint8",
-            },
-        ],
-        name: "registerDeveloper",
-        outputs: [],
-        stateMutability: "nonpayable",
         type: "function",
     },
 ] as const;

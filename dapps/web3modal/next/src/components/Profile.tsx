@@ -6,8 +6,9 @@ import React, { useEffect, useState } from "react";
 import { readContract, writeContract } from "@wagmi/core";
 import { config } from "@/config";
 import abi from "./abi";
+import { parseEther, formatEther } from "viem";
 
-const contractAddress = "0xC5B5827B55F31D17018BbC52B6bb123f7615B68F";
+const contractAddress = "0xC1e20a058Ab5A346Ee03C9296FA05aF7f8456556";
 
 export default function Profile({ role }: { role: "client" | "developer" }) {
     const { open } = useWeb3Modal();
@@ -21,8 +22,23 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
     // New state variables for job offering
     const [jobTitle, setJobTitle] = useState("");
     const [jobDescription, setJobDescription] = useState("");
-    const [jobPrice, setJobPrice] = useState<number>(0);
+    const [jobPrice, setJobPrice] = useState<string>("0");
     const [offerings, setOfferings] = useState<any[]>([]); // State to store offerings
+
+    // Function to convert Ether to Wei using viem
+    const convertEtherToWei = (etherValue: string): bigint => {
+        return parseEther(etherValue);
+    };
+
+    // Function to convert a string to BigInt
+
+    const stringToBigInt = (value: string): bigint => {
+        return BigInt(value);
+    };
+
+    const convertWeiToEther = (weiValue: bigint): string => {
+        return formatEther(weiValue);
+    };
 
     useEffect(() => {
         if (address) {
@@ -120,18 +136,22 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
 
     const createJobOffering = async () => {
         try {
+            console.log(jobPrice);
+            console.log(convertEtherToWei(jobPrice));
+            console.log(Number(convertEtherToWei(jobPrice)));
+
             const result = await writeContract(config, {
                 abi,
                 address: contractAddress,
                 functionName: "createOffering",
-                args: [jobTitle, jobDescription, jobPrice],
+                args: [jobTitle, jobDescription, convertEtherToWei(jobPrice)],
             });
             console.log("Job offering created:", result);
             fetchDeveloperOfferings();
             // Reset form
             setJobTitle("");
             setJobDescription("");
-            setJobPrice(0);
+            setJobPrice("0");
         } catch (error) {
             console.error("Error creating job offering:", error);
         }
@@ -200,12 +220,10 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                                 }
                             />
                             <input
-                                type="number"
+                                type="text"
                                 placeholder="Job Price"
                                 value={jobPrice}
-                                onChange={(e) =>
-                                    setJobPrice(Number(e.target.value))
-                                }
+                                onChange={(e) => setJobPrice(e.target.value)}
                             />
                             <button onClick={createJobOffering}>
                                 Create Job Offering
@@ -218,7 +236,10 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                                     <div key={index}>
                                         <h3>title: {offering[3]}</h3>
                                         <p>description: {offering[4]}</p>
-                                        <p>Price: {offering[5].toString()}</p>
+                                        <p>
+                                            Price:{" "}
+                                            {convertWeiToEther(offering[5])}
+                                        </p>
                                         <p>Status: {offering[6]}</p>
                                     </div>
                                 ))

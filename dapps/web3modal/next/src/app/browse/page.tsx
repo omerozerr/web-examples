@@ -7,7 +7,7 @@ import { config } from "@/config";
 import abi from "@/components/abi";
 import Link from "next/link";
 
-const contractAddress = "0xC5B5827B55F31D17018BbC52B6bb123f7615B68F";
+const contractAddress = "0xC1e20a058Ab5A346Ee03C9296FA05aF7f8456556";
 
 export default function Browse() {
     const { address, isConnected } = useAccount();
