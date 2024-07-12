@@ -1,16 +1,17 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { createWeb3Modal } from "@web3modal/wagmi/react";
 
 import { http, createConfig, WagmiProvider } from "wagmi";
-import { mainnet, arbitrum } from "viem/chains";
+import { sepolia } from "viem/chains";
 import { walletConnect, coinbaseWallet, injected } from "wagmi/connectors";
-import type { CreateConnectorFn } from '@wagmi/core'
+import type { CreateConnectorFn } from "@wagmi/core";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { authConnector,  } from "@web3modal/wagmi";
+import { authConnector } from "@web3modal/wagmi";
+import WalletComponent from "./WalletComponent";
 
-import "./styles.css"
+import "./styles.css";
 
 // 0. Setup queryClient
 const queryClient = new QueryClient();
@@ -21,52 +22,60 @@ if (!projectId) throw new Error("Project ID is undefined");
 
 // 2. Create wagmiConfig
 const metadata = {
-  name: "Web3Modal",
-  description: "Web3Modal Example",
-  url: "https://web3modal.com",
-  icons: ["https://avatars.githubusercontent.com/u/37784886"],
+    name: "Web3Modal",
+    description: "Web3Modal Example",
+    url: "https://web3modal.com",
+    icons: ["https://avatars.githubusercontent.com/u/37784886"],
 };
 
 // Define chains
-const chains = [mainnet, arbitrum] as const
+const chains = [sepolia] as const;
 
 // create the connectors
-const connectors: CreateConnectorFn[] = []
+const connectors: CreateConnectorFn[] = [];
 connectors.push(walletConnect({ projectId, metadata, showQrModal: false }));
 connectors.push(injected({ shimDisconnect: true }));
-connectors.push(coinbaseWallet({
-  appName: metadata.name,
-  appLogoUrl: metadata.icons[0],
-}));
+connectors.push(
+    coinbaseWallet({
+        appName: metadata.name,
+        appLogoUrl: metadata.icons[0],
+    })
+);
 
-connectors.push(authConnector({ 
-  options: { projectId },
-  socials: ['google', 'x', 'github', 'discord', 'apple'], // this will create a non-custodial wallet (please check https://secure.walletconnect.com/dashboard for more info)
-  showWallets: true,
-  email: true,
-  walletFeatures: false,
-}));
+connectors.push(
+    authConnector({
+        options: { projectId },
+        socials: ["google", "x", "github", "discord", "apple"], // this will create a non-custodial wallet (please check https://secure.walletconnect.com/dashboard for more info)
+        showWallets: true,
+        email: true,
+        walletFeatures: false,
+    })
+);
 
 const wagmiConfig = createConfig({
-  chains, // Use the defined chains here
-  transports: {
-    [mainnet.id]: http(),
-    [arbitrum.id]: http(),
-  },
-  connectors: connectors,
+    chains, // Use the defined chains here
+    transports: {
+        [sepolia.id]: http(),
+    },
+    connectors: connectors,
 });
 
 // 3. Create modal
-createWeb3Modal({ wagmiConfig, projectId });
+createWeb3Modal({
+    wagmiConfig,
+    projectId,
+    enableOnramp: true, // Optional - false as default
+});
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <React.StrictMode>
-    <WagmiProvider config={wagmiConfig}>
-      <QueryClientProvider client={queryClient}>
-        <div className="centered-div">
-          <w3m-button />
-        </div>
-      </QueryClientProvider>
-    </WagmiProvider>
-  </React.StrictMode>
+    <React.StrictMode>
+        <WagmiProvider config={wagmiConfig}>
+            <QueryClientProvider client={queryClient}>
+                <div className="centered-div">
+                    <w3m-button />
+                    <WalletComponent wagmiConfig={wagmiConfig} />
+                </div>
+            </QueryClientProvider>
+        </WagmiProvider>
+    </React.StrictMode>
 );

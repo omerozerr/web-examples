@@ -1,5 +1,5 @@
-'use client'
+"use client";
 
 export default function Connect() {
-  return <w3m-button />
+    return <w3m-button />;
 }

@@ -1,22 +1,37 @@
+
+// config/index.tsx
+
 import { defaultWagmiConfig } from '@web3modal/wagmi/react/config'
+
 import { cookieStorage, createStorage } from 'wagmi'
 import { mainnet, sepolia } from 'wagmi/chains'
 
-export const projectId = process.env.NEXT_PUBLIC_PROJECT_ID
+// Your WalletConnect Cloud project ID
+export const projectId = 'b8e55f313fe6c16ae34f4fbeb9bc48e1'
 
-if (!projectId) throw new Error('Project ID is not defined')
+// Create a metadata object
+const metadata = {
+  name: 'Threer',
+  description: 'Best Onchain Marketplace for devs',
+  url: 'https://web3modal.com', // origin must match your domain & subdomain
+  icons: ['https://avatars.githubusercontent.com/u/37784886']
+}
 
+// Create wagmiConfig
+const chains = [mainnet, sepolia] as const
 export const config = defaultWagmiConfig({
+  chains,
   projectId,
-  chains: [mainnet, sepolia],
-  metadata: {
-    name: 'My App',
-    description: 'My app description',
-    url: 'https://myapp.com',
-    icons: ['https://myapp.com/favicon.ico']
-  },
+  metadata,
+  ssr: true,
   storage: createStorage({
     storage: cookieStorage
   }),
-  ssr: true
+  auth: {
+    email: true, // default to true
+    socials: ['google', 'x', 'github', 'discord', 'apple'],
+    showWallets: true, // default to true
+    walletFeatures: true // default to true
+  }
+
 })

@@ -1,32 +1,41 @@
-'use client'
+// context/index.tsx
 
-import { config, projectId } from '@/config'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { createWeb3Modal } from '@web3modal/wagmi/react'
-import React, { ReactNode } from 'react'
-import { State, WagmiProvider } from 'wagmi'
+"use client";
 
-const queryClient = new QueryClient()
+import React, { ReactNode } from "react";
+import { config, projectId } from "@/config";
 
-if (!projectId) throw new Error('Project ID is not defined')
+import { createWeb3Modal } from "@web3modal/wagmi/react";
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+import { State, WagmiProvider } from "wagmi";
+
+// Setup queryClient
+const queryClient = new QueryClient();
+
+if (!projectId) throw new Error("Project ID is not defined");
+
+// Create modal
 createWeb3Modal({
-  wagmiConfig: config,
-  projectId
-})
+    wagmiConfig: config,
+    projectId,
+    enableAnalytics: true, // Optional - defaults to your Cloud configuration
+    enableOnramp: true, // Optional - false as default
+});
 
-function ContextProvider({
-  children,
-  initialState
+export default function Web3ModalProvider({
+    children,
+    initialState,
 }: {
-  children: ReactNode
-  initialState: State | undefined
+    children: ReactNode;
+    initialState?: State;
 }) {
-  return (
-    <WagmiProvider config={config} initialState={initialState}>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    </WagmiProvider>
-  )
+    return (
+        <WagmiProvider config={config} initialState={initialState}>
+            <QueryClientProvider client={queryClient}>
+                {children}
+            </QueryClientProvider>
+        </WagmiProvider>
+    );
 }
-
-export default ContextProvider

@@ -1,12 +1,15 @@
-import Connect from '@/components/Connect'
-import styles from './page.module.css'
-import Custom from '@/components/Custom'
+"use client";
+import Connect from "@/components/Connect";
+import styles from "./page.module.css";
+import { useRouter } from "next/navigation"; // Update import to next/navigation
+import React from "react";
 
 export default function Home() {
-  return (
-    <main className={styles.main}>
-      <Connect />
-      <Custom/>
-    </main>
-  )
+    const router = useRouter();
+
+    return (
+        <div>
+            <h1>Welcome to the Threer</h1>
+        </div>
+    );
 }
