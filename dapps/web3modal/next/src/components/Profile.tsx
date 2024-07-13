@@ -217,6 +217,22 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
         }
     };
 
+    const markOfferingCompleted = async (id: bigint) => {
+        try {
+            const result = await writeContract(config, {
+                abi,
+                address: contractAddress,
+                functionName: "markOfferingCompleted",
+                args: [id],
+                chainId: 84532, // Ensure the chain ID is set correctly for Base Sepolia
+            });
+            console.log("Offering marked as completed:", result);
+            fetchDeveloperOfferings(); // Refresh the offerings
+        } catch (error) {
+            console.error("Error marking offering as completed:", error);
+        }
+    };
+
     return (
         <div className={styles["profile-container"]}>
             {isRegistered && isConnected ? (
@@ -310,6 +326,18 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                                             {convertWeiToEther(offering[5])}
                                         </p>
                                         <p>Status: {offering[6]}</p>
+                                        {offering[6] == 1 && (
+                                            <button
+                                                onClick={() =>
+                                                    markOfferingCompleted(
+                                                        offering[0]
+                                                    )
+                                                }
+                                                className={styles.button}
+                                            >
+                                                Mark as Completed
+                                            </button>
+                                        )}
                                     </div>
                                 ))
                             ) : (
@@ -322,7 +350,7 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                         <h3>Client Profile</h3>
                         <div>Connected Wallet Address: {address}</div>
                         <div>Telegram Handle: {telegramHandle}</div>
-                        <div className={styles["profile-section"]}>
+                        <div>
                             <h4>Edit Profile</h4>
                             <input
                                 type="text"
