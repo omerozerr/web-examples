@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link"; // Import Link from next/link
 import Connect from "./Connect";
 import styles from "./Header.module.css";
 import { useAccount, useDisconnect } from "wagmi";
@@ -26,7 +27,13 @@ const Header = () => {
     return (
         <header className={styles.header}>
             <div className={styles.logoContainer}>
-                <img src="/DevChainBg.png" alt="Logo" className={styles.logo} />
+                <Link href="/">
+                    <img
+                        src="/DevChainBg.png"
+                        alt="Logo"
+                        className={styles.logo}
+                    />
+                </Link>
             </div>
             <nav>
                 <ul className={styles.nav}>

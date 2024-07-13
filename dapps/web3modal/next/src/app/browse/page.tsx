@@ -19,6 +19,19 @@ export default function Browse() {
         [key: string]: number;
     }>({});
 
+    const getStatusText = (status: number): string => {
+        switch (status) {
+            case 0:
+                return "Open";
+            case 1:
+                return "In Progress";
+            case 2:
+                return "Completed";
+            default:
+                return "Unknown";
+        }
+    };
+
     // Function to convert Ether to Wei using viem
     const convertEtherToWei = (etherValue: string): bigint => {
         return parseEther(etherValue);
@@ -144,7 +157,7 @@ export default function Browse() {
                             <p>
                                 Price: {convertWeiToEther(offering.price)} ETH
                             </p>
-                            <p>Status: {offering.status}</p>
+                            <p>Status: {getStatusText(offering.status)}</p>
                             <p>Builder: {offering.developer}</p>
                             {builderScores[offering.developer] !==
                                 undefined && (

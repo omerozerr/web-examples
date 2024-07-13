@@ -29,6 +29,19 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
 
     const [purchasedOffers, setPurchasedOffers] = useState<any[]>([]); // State to store purchased offerings
 
+    const getStatusText = (status: number): string => {
+        switch (status) {
+            case 0:
+                return "Open";
+            case 1:
+                return "In Progress";
+            case 2:
+                return "Completed";
+            default:
+                return "Unknown";
+        }
+    };
+
     const convertEtherToWei = (etherValue: string): bigint => {
         return parseEther(etherValue);
     };
@@ -362,7 +375,9 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                                             Price:{" "}
                                             {convertWeiToEther(offering[5])} ETH
                                         </p>
-                                        <p>Status: {offering[6]}</p>
+                                        <p>
+                                            Status: {getStatusText(offering[6])}
+                                        </p>
                                         {offering[6] == 1 && (
                                             <button
                                                 onClick={() =>
@@ -421,7 +436,9 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                                                 offering[5].toString()
                                             )}
                                         </p>
-                                        <p>Status: {offering[6]}</p>
+                                        <p>
+                                            Status: {getStatusText(offering[6])}
+                                        </p>
                                         <p>Builder: {offering[1]}</p>
                                     </div>
                                 ))
