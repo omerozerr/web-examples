@@ -46,8 +46,6 @@ export default function DeveloperProfile() {
             <div>Name: {profile[1]}</div>
             <div>Bio: {profile[2]}</div>
             <div>Builder Score: {profile[3].toString()}</div>
-            {/* Assuming there's a profile picture URL stored in the profile data */}
-            {profile[5] && <img src={profile[5]} alt="Profile Picture" />}
         </div>
     );
 }
