@@ -1,9 +1,45 @@
-.main {
+.container {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 6rem;
-  gap: 40px;
-  min-height: 100vh;
+  padding: 20px;
+  background-color: #f0f4f8;
+  height: 100vh; /* Full height of the viewport */
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.textSection {
+  flex: 1;
+  padding: 20px;
+  color: black;
+}
+
+.header {
+  margin-bottom: 20px;
+  font-size: 2em;
+}
+
+.paragraph {
+  font-size: 1.2em;
+  margin-bottom: 20px;
+}
+
+.logoSection {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo {
+  max-width: 100%;
+  height: auto;
+  max-height: 70vh; /* Adjust the size of the logo as needed */
 }
