@@ -1,28 +1,51 @@
 .container {
     padding: 20px;
     background-color: #f0f4f8;
+    text-align: left;
     color: black;
+    max-width: 800px;
+    margin: 0 auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .header {
+    font-size: 2em;
     margin-bottom: 20px;
+    color: #0070f3;
+    text-align: center;
 }
 
 .info {
+    font-size: 1.2em;
     margin-bottom: 10px;
-    font-size: 16px;
+}
+
+.subHeader {
+    font-size: 1.5em;
+    margin-top: 30px;
+    color: #0070f3;
+}
+
+.offering {
+    background-color: white;
+    border: 2px solid #0070f3;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .button {
     display: inline-block;
-    margin-top: 20px;
-    padding: 10px 20px;
     background-color: #0070f3;
     color: white;
-    text-decoration: none;
+    border: none;
+    padding: 10px 20px;
     border-radius: 4px;
-    transition: background-color 0.2s;
     cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.2s;
 }
 
 .button:hover {

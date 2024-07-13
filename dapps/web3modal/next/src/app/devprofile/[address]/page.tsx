@@ -6,6 +6,7 @@ import { readContract } from "@wagmi/core";
 import { config } from "@/config";
 import abi from "@/components/abi";
 import styles from "./DeveloperProfile.module.css"; // Import the CSS module
+import { formatEther } from "viem";
 
 const contractAddress = "0x12D1e124F8C2f20FE9b98CA91B9a51f71A8792E9";
 
@@ -14,11 +15,13 @@ export default function DeveloperProfile() {
     const [profile, setProfile] = useState<any>(null);
     const [farcasterURL, setFarcasterURL] = useState<string>("");
     const [passportURL, setPassportURL] = useState<string>("");
+    const [offerings, setOfferings] = useState<any[]>([]); // State to store developer's job offerings
 
     useEffect(() => {
         if (address) {
             fetchDeveloperProfile(address as `0x${string}`);
             fetchPassportInfo(address as `0x${string}`);
+            fetchDeveloperOfferings(address as `0x${string}`);
         }
     }, [address]);
 
@@ -69,6 +72,45 @@ export default function DeveloperProfile() {
         }
     };
 
+    const fetchDeveloperOfferings = async (developerAddress: `0x${string}`) => {
+        try {
+            const offeringIds = await readContract(config, {
+                abi,
+                address: contractAddress,
+                functionName: "getDeveloperOfferings",
+                args: [developerAddress],
+            });
+
+            const offeringDetails = await Promise.all(
+                offeringIds.map(async (id: bigint) => {
+                    const offering = await readContract(config, {
+                        abi,
+                        address: contractAddress,
+                        functionName: "offerings",
+                        args: [id],
+                    });
+                    return offering;
+                })
+            );
+            setOfferings(offeringDetails);
+        } catch (error) {
+            console.error("Error fetching developer offerings:", error);
+        }
+    };
+
+    const getStatusText = (status: number): string => {
+        switch (status) {
+            case 0:
+                return "Open";
+            case 1:
+                return "In Progress";
+            case 2:
+                return "Completed";
+            default:
+                return "Unknown";
+        }
+    };
+
     if (!profile) {
         return <div>Loading...</div>;
     }
@@ -93,6 +135,9 @@ export default function DeveloperProfile() {
                     View Farcaster
                 </a>
             )}
+            <br></br>
+            <br></br>
+
             {passportURL && (
                 <a
                     href={passportURL}
@@ -102,6 +147,19 @@ export default function DeveloperProfile() {
                 >
                     View Talent Passport
                 </a>
+            )}
+            <h2 className={styles.subHeader}>Job Offerings</h2>
+            {offerings.length > 0 ? (
+                offerings.map((offering, index) => (
+                    <div key={index} className={styles.offering}>
+                        <h3>{offering[3]}</h3>
+                        <p>{offering[4]}</p>
+                        <p>Price: {formatEther(offering[5])} ETH</p>
+                        <p>Status: {getStatusText(offering[6])}</p>
+                    </div>
+                ))
+            ) : (
+                <p>No job offerings found.</p>
             )}
         </div>
     );
