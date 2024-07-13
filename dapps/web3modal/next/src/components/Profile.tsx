@@ -7,6 +7,7 @@ import { readContract, writeContract } from "@wagmi/core";
 import { config } from "@/config";
 import abi from "./abi";
 import { parseEther, formatEther } from "viem";
+import styles from "./Profile.module.css"; // Import the CSS module
 
 const contractAddress = "0xC1e20a058Ab5A346Ee03C9296FA05aF7f8456556";
 
@@ -22,15 +23,12 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
     // New state variables for job offering
     const [jobTitle, setJobTitle] = useState("");
     const [jobDescription, setJobDescription] = useState("");
-    const [jobPrice, setJobPrice] = useState<string>("0");
+    const [jobPrice, setJobPrice] = useState<string>("");
     const [offerings, setOfferings] = useState<any[]>([]); // State to store offerings
 
-    // Function to convert Ether to Wei using viem
     const convertEtherToWei = (etherValue: string): bigint => {
         return parseEther(etherValue);
     };
-
-    // Function to convert a string to BigInt
 
     const stringToBigInt = (value: string): bigint => {
         return BigInt(value);
@@ -191,25 +189,25 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
     };
 
     return (
-        <div>
-            <div>Connected Wallet Address: {address}</div>
-
+        <div className={styles["profile-container"]}>
             {isRegistered && isConnected ? (
                 role === "developer" ? (
                     <div>
-                        <div>
+                        <div className={styles["profile-section"]}>
                             <h3>Developer Profile</h3>
+                            <div>Connected Wallet Address: {address}</div>
                             <div>Name: {name}</div>
                             <div>Bio: {bio}</div>
                             <div>Builder Score: {builderScore.toString()}</div>
                         </div>
-                        <div>
+                        <div className={styles["profile-section"]}>
                             <h4>Create Job Offering</h4>
                             <input
                                 type="text"
                                 placeholder="Job Title"
                                 value={jobTitle}
                                 onChange={(e) => setJobTitle(e.target.value)}
+                                className={styles.input}
                             />
                             <input
                                 type="text"
@@ -218,24 +216,32 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                                 onChange={(e) =>
                                     setJobDescription(e.target.value)
                                 }
+                                className={styles.input}
                             />
                             <input
                                 type="text"
                                 placeholder="Job Price"
                                 value={jobPrice}
                                 onChange={(e) => setJobPrice(e.target.value)}
+                                className={styles.input}
                             />
-                            <button onClick={createJobOffering}>
+                            <button
+                                onClick={createJobOffering}
+                                className={styles.button}
+                            >
                                 Create Job Offering
                             </button>
                         </div>
-                        <div>
+                        <div className={styles["profile-section"]}>
                             <h4>My Job Offerings</h4>
                             {offerings.length > 0 ? (
                                 offerings.map((offering, index) => (
-                                    <div key={index}>
-                                        <h3>title: {offering[3]}</h3>
-                                        <p>description: {offering[4]}</p>
+                                    <div
+                                        key={index}
+                                        className={styles["offering"]}
+                                    >
+                                        <h3>Title: {offering[3]}</h3>
+                                        <p>Description: {offering[4]}</p>
                                         <p>
                                             Price:{" "}
                                             {convertWeiToEther(offering[5])}
@@ -249,12 +255,12 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                         </div>
                     </div>
                 ) : (
-                    <div>
+                    <div className={styles["profile-section"]}>
                         <h3>Client Profile</h3>
                     </div>
                 )
             ) : isConnected ? (
-                <div>
+                <div className={styles["profile-section"]}>
                     {role === "developer" ? (
                         <div>
                             <h3>Register as Developer</h3>
@@ -263,26 +269,36 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                                 placeholder="Name"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
+                                className={styles.input}
                             />
                             <input
                                 type="text"
                                 placeholder="Bio"
                                 value={bio}
                                 onChange={(e) => setBio(e.target.value)}
+                                className={styles.input}
                             />
-                            <button onClick={registerDeveloper}>
+                            <button
+                                onClick={registerDeveloper}
+                                className={styles.button}
+                            >
                                 Register
                             </button>
                         </div>
                     ) : (
                         <div>
                             <h3>Register as Client</h3>
-                            <button onClick={registerClient}>Register</button>
+                            <button
+                                onClick={registerClient}
+                                className={styles.button}
+                            >
+                                Register
+                            </button>
                         </div>
                     )}
                 </div>
             ) : (
-                <p>Please connect your wallet</p>
+                <p className={styles.text}>Please connect your wallet</p>
             )}
         </div>
     );

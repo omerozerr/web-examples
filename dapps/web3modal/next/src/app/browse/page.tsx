@@ -6,6 +6,8 @@ import { readContract, writeContract } from "@wagmi/core";
 import { config } from "@/config";
 import abi from "@/components/abi";
 import Link from "next/link";
+import { parseEther, formatEther } from "viem";
+import styles from "./Browse.module.css"; // Import the CSS module
 
 const contractAddress = "0xC1e20a058Ab5A346Ee03C9296FA05aF7f8456556";
 
@@ -13,6 +15,21 @@ export default function Browse() {
     const { address, isConnected } = useAccount();
     const [offerings, setOfferings] = useState<any[]>([]);
     const [isClient, setIsClient] = useState(false);
+
+    // Function to convert Ether to Wei using viem
+    const convertEtherToWei = (etherValue: string): bigint => {
+        return parseEther(etherValue);
+    };
+
+    // Function to convert a string to BigInt
+
+    const stringToBigInt = (value: string): bigint => {
+        return BigInt(value);
+    };
+
+    const convertWeiToEther = (weiValue: bigint): string => {
+        return formatEther(weiValue);
+    };
 
     useEffect(() => {
         fetchAllOfferings();
@@ -76,37 +93,51 @@ export default function Browse() {
 
     return (
         <div>
-            <h1>Browse Offerings</h1>
+            <h1 className={styles.header}>Browse Offerings</h1>
             {isConnected ? (
                 <p></p>
             ) : (
-                <p>Connect your wallet to be able to buy offerings</p>
+                <p className={styles.text}>
+                    {" "}
+                    Connect your wallet to be able to buy offerings
+                </p>
             )}
-            {offerings.length > 0 ? (
-                offerings.map((offering, index) => (
-                    <div key={index}>
-                        <h3>{offering.title}</h3>
-                        <p>{offering.description}</p>
-                        <p>Price: {offering.price.toString()}</p>
-                        <p>Status: {offering.status}</p>
-                        <p>Builder: {offering.developer}</p>
-                        <Link href={`/devprofile/${offering.developer}`}>
-                            View Developer Profile
-                        </Link>
-                        {isClient && offering.status == 0 && isConnected && (
-                            <button
-                                onClick={() =>
-                                    buyOffering(offering.id, offering.price)
-                                }
+            <div className={styles.container}>
+                {offerings.length > 0 ? (
+                    offerings.map((offering, index) => (
+                        <div key={index} className={styles.offering}>
+                            <h3>{offering.title}</h3>
+                            <p>{offering.description}</p>
+                            <p>Price: {convertWeiToEther(offering.price)}</p>
+                            <p>Status: {offering.status}</p>
+                            <p>Builder: {offering.developer}</p>
+                            <Link
+                                className={styles.button}
+                                href={`/devprofile/${offering.developer}`}
                             >
-                                Buy
-                            </button>
-                        )}
-                    </div>
-                ))
-            ) : (
-                <p>No offerings available.</p>
-            )}
+                                View Developer Profile
+                            </Link>
+                            {isClient &&
+                                offering.status == 0 &&
+                                isConnected && (
+                                    <button
+                                        className={styles.button}
+                                        onClick={() =>
+                                            buyOffering(
+                                                offering.id,
+                                                offering.price
+                                            )
+                                        }
+                                    >
+                                        Buy
+                                    </button>
+                                )}
+                        </div>
+                    ))
+                ) : (
+                    <p>No offerings available.</p>
+                )}
+            </div>
         </div>
     );
 }

@@ -51,7 +51,9 @@ const Header = () => {
                 </ul>
             </nav>
             {isConnected ? (
-                <button onClick={() => disconnect()}>Disconnect</button>
+                <button className={styles.button} onClick={() => disconnect()}>
+                    Disconnect
+                </button>
             ) : (
                 <p></p>
             )}
