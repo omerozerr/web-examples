@@ -25,6 +25,9 @@ const Header = () => {
 
     return (
         <header className={styles.header}>
+            <div className={styles.logoContainer}>
+                <img src="/DevChainBg.png" alt="Logo" className={styles.logo} />
+            </div>
             <nav>
                 <ul className={styles.nav}>
                     <li className={styles.navItem}>

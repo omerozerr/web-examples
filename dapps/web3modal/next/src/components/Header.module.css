@@ -1,30 +1,42 @@
 .header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
     padding: 10px 20px;
-    background-color: #f8f9fa;
-    border-bottom: 1px solid #e0e0e0;
+    background-color: #f0f4f8;
+}
+
+.logoContainer {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    height: 60px; /* Adjust the size of the logo as needed */
+    margin-right: 20px; /* Space between the logo and the navigation */
 }
 
 .nav {
-    list-style: none;
     display: flex;
-    gap: 20px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 .navItem {
-    display: inline;
+    margin-right: 20px;
 }
 
 .button {
-    background: none;
+    background-color: #0070f3;
+    color: white;
     border: none;
-    color: #0070f3;
+    padding: 10px 20px;
+    border-radius: 4px;
     cursor: pointer;
-    font-size: 16px;
+    transition: background-color 0.2s;
 }
 
 .button:hover {
-    text-decoration: underline;
+    background-color: #005bb5;
 }
