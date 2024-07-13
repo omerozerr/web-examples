@@ -27,6 +27,8 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
     const [jobPrice, setJobPrice] = useState<string>("");
     const [offerings, setOfferings] = useState<any[]>([]); // State to store offerings
 
+    const [purchasedOffers, setPurchasedOffers] = useState<any[]>([]); // State to store purchased offerings
+
     const convertEtherToWei = (etherValue: string): bigint => {
         return parseEther(etherValue);
     };
@@ -49,8 +51,43 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
     useEffect(() => {
         if (isRegistered && role === "developer") {
             fetchDeveloperOfferings();
+        } else if (isRegistered && role === "client") {
+            fetchClientPurchases();
         }
     }, [isRegistered, role]);
+
+    const fetchClientPurchases = async () => {
+        if (!address) return; // Added check for address
+        try {
+            console.log("checking purchases");
+            const purchaseIds = await readContract(config, {
+                abi,
+                address: contractAddress,
+                functionName: "getClientPurchases",
+                args: [address],
+                chainId: 84532, // Ensure the chain ID is set correctly for Base Sepolia
+            });
+            console.log(purchaseIds);
+
+            const purchaseDetails = await Promise.all(
+                purchaseIds.map(async (id: bigint) => {
+                    const purchase = await readContract(config, {
+                        abi,
+                        address: contractAddress,
+                        functionName: "offerings",
+                        args: [id],
+                        chainId: 84532, // Ensure the chain ID is set correctly for Base Sepolia
+                    });
+                    return purchase;
+                })
+            );
+            console.log(purchaseDetails);
+
+            setPurchasedOffers(purchaseDetails);
+        } catch (error) {
+            console.error("Error fetching client purchases:", error);
+        }
+    };
 
     const fetchBuilderScore = async (walletAddress: string) => {
         try {
@@ -361,13 +398,36 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                                 }
                                 className={styles.input}
                             />
-
                             <button
                                 onClick={updateClientProfile}
                                 className={styles.button}
                             >
                                 Update Profile
                             </button>
+                        </div>
+                        <div>
+                            <h4>Purchased Offers</h4>
+                            {purchasedOffers.length > 0 ? (
+                                purchasedOffers.map((offering, index) => (
+                                    <div
+                                        key={index}
+                                        className={styles.offering}
+                                    >
+                                        <h3>{offering[3]}</h3>
+                                        <p>{offering[4]}</p>
+                                        <p>
+                                            Price:{" "}
+                                            {convertWeiToEther(
+                                                offering[5].toString()
+                                            )}
+                                        </p>
+                                        <p>Status: {offering[6]}</p>
+                                        <p>Builder: {offering[1]}</p>
+                                    </div>
+                                ))
+                            ) : (
+                                <p>No purchased offers found.</p>
+                            )}
                         </div>
                     </div>
                 )
