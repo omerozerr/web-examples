@@ -29,6 +29,21 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
 
     const [purchasedOffers, setPurchasedOffers] = useState<any[]>([]); // State to store purchased offerings
 
+    const [updateDevTxHash, setUpdateDevTxHash] = useState<string | null>(null);
+    const [updateClientTxHash, setUpdateClientTxHash] = useState<string | null>(
+        null
+    );
+    const [registerDevTxHash, setRegisterDevTxHash] = useState<string | null>(
+        null
+    );
+    const [registerClientTxHash, setRegisterClientTxHash] = useState<
+        string | null
+    >(null);
+    const [createJobTxHash, setCreateJobTxHash] = useState<string | null>(null);
+    const [markcompletedTxHash, setmarkcompletedTxHash] = useState<
+        string | null
+    >(null);
+
     const getStatusText = (status: number): string => {
         switch (status) {
             case 0:
@@ -165,6 +180,7 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                 args: [name, bio, builderScore, telegramHandle],
             });
             setIsRegistered(true);
+            setRegisterDevTxHash(result); // Capture transaction hash
         } catch (error) {
             console.error("Error registering developer:", error);
         }
@@ -179,6 +195,7 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                 args: [telegramHandle],
             });
             setIsRegistered(true);
+            setRegisterClientTxHash(result); // Capture transaction hash
         } catch (error) {
             console.error("Error registering client:", error);
         }
@@ -193,6 +210,7 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                 args: [name, bio, builderScore, telegramHandle],
             });
             console.log("Developer profile updated:", result);
+            setUpdateDevTxHash(result); // Capture transaction hash
         } catch (error) {
             console.error("Error updating developer profile:", error);
         }
@@ -207,6 +225,7 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                 args: [telegramHandle],
             });
             console.log("Client profile updated:", result);
+            setUpdateClientTxHash(result); // Capture transaction hash
         } catch (error) {
             console.error("Error updating client profile:", error);
         }
@@ -226,6 +245,7 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                 chainId: 84532,
             });
             console.log("Job offering created:", result);
+            setCreateJobTxHash(result); // Capture transaction hash
             fetchDeveloperOfferings();
             // Reset form
             setJobTitle("");
@@ -278,6 +298,7 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
             });
             console.log("Offering marked as completed:", result);
             fetchDeveloperOfferings(); // Refresh the offerings
+            setmarkcompletedTxHash(result); // Capture transaction hash
         } catch (error) {
             console.error("Error marking offering as completed:", error);
         }
@@ -328,6 +349,19 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                             >
                                 Update Profile
                             </button>
+                            <br></br>
+                            <br></br>
+
+                            {updateDevTxHash && (
+                                <a
+                                    href={`https://base.blockscout.com/tx/${updateDevTxHash}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={styles.link}
+                                >
+                                    See the tx on Blockscout Explorer
+                                </a>
+                            )}
                         </div>
                         <div className={styles["profile-section"]}>
                             <h4>Create Job Offering</h4>
@@ -360,6 +394,18 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                             >
                                 Create Job Offering
                             </button>
+                            <br></br>
+                            <br></br>
+                            {createJobTxHash && (
+                                <a
+                                    href={`https://base.blockscout.com/tx/${createJobTxHash}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={styles.link}
+                                >
+                                    See the tx on Blockscout Explorer
+                                </a>
+                            )}
                         </div>
                         <div className={styles["profile-section"]}>
                             <h4>My Job Offerings</h4>
@@ -379,16 +425,32 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                                             Status: {getStatusText(offering[6])}
                                         </p>
                                         {offering[6] == 1 && (
-                                            <button
-                                                onClick={() =>
-                                                    markOfferingCompleted(
-                                                        offering[0]
-                                                    )
-                                                }
-                                                className={styles.button}
-                                            >
-                                                Mark as Completed
-                                            </button>
+                                            <div>
+                                                <button
+                                                    onClick={() =>
+                                                        markOfferingCompleted(
+                                                            offering[0]
+                                                        )
+                                                    }
+                                                    className={styles.button}
+                                                >
+                                                    Mark as Completed
+                                                </button>
+                                                <br></br>
+                                                <br></br>
+
+                                                {markcompletedTxHash && (
+                                                    <a
+                                                        href={`https://base.blockscout.com/tx/${markcompletedTxHash}`}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className={styles.link}
+                                                    >
+                                                        See the tx on Blockscout
+                                                        Explorer
+                                                    </a>
+                                                )}
+                                            </div>
                                         )}
                                     </div>
                                 ))
@@ -419,6 +481,19 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                             >
                                 Update Profile
                             </button>
+                            <br></br>
+                            <br></br>
+
+                            {updateClientTxHash && (
+                                <a
+                                    href={`https://base.blockscout.com/tx/${updateClientTxHash}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={styles.link}
+                                >
+                                    See the tx on Blockscout Explorer
+                                </a>
+                            )}
                         </div>
                         <div>
                             <h4>Purchased Offers</h4>
@@ -483,6 +558,19 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                             >
                                 Register
                             </button>
+                            <br></br>
+                            <br></br>
+
+                            {registerDevTxHash && (
+                                <a
+                                    href={`https://base.blockscout.com/tx/${registerDevTxHash}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={styles.link}
+                                >
+                                    See the tx on Blockscout Explorer
+                                </a>
+                            )}
                         </div>
                     ) : (
                         <div>
@@ -503,6 +591,19 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                             >
                                 Register
                             </button>
+                            <br></br>
+                            <br></br>
+
+                            {registerClientTxHash && (
+                                <a
+                                    href={`https://base.blockscout.com/tx/${registerClientTxHash}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={styles.link}
+                                >
+                                    See the tx on Blockscout Explorer
+                                </a>
+                            )}
                         </div>
                     )}
                 </div>

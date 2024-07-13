@@ -19,6 +19,8 @@ export default function Browse() {
         [key: string]: number;
     }>({});
 
+    const [transactionHash, setTransactionHash] = useState<string | null>(null);
+
     const getStatusText = (status: number): string => {
         switch (status) {
             case 0:
@@ -131,6 +133,7 @@ export default function Browse() {
                 value: price,
             });
             console.log("Offering purchased:", result);
+            setTransactionHash(result); // Capture transaction hash
             // Update offerings list or perform additional actions after purchase
         } catch (error) {
             console.error("Error purchasing offering:", error);
@@ -166,29 +169,51 @@ export default function Browse() {
                                     {builderScores[offering.developer]}
                                 </p>
                             )}
+
                             {offering.status === 1 || offering.status === 2 ? (
                                 <p>Client: {offering.client}</p>
                             ) : null}
+                            <br></br>
+
                             <Link
                                 className={styles.button}
                                 href={`/devprofile/${offering.developer}`}
                             >
                                 View Developer Profile
                             </Link>
+                            <br></br>
+                            <br></br>
+
                             {isClient &&
                                 offering.status == 0 &&
                                 isConnected && (
-                                    <button
-                                        className={styles.button}
-                                        onClick={() =>
-                                            buyOffering(
-                                                offering.id,
-                                                offering.price
-                                            )
-                                        }
-                                    >
-                                        Buy
-                                    </button>
+                                    <>
+                                        <button
+                                            className={styles.button}
+                                            onClick={() =>
+                                                buyOffering(
+                                                    offering.id,
+                                                    offering.price
+                                                )
+                                            }
+                                        >
+                                            Buy
+                                        </button>
+                                        <br></br>
+                                        <br></br>
+
+                                        {transactionHash && (
+                                            <a
+                                                href={`https://base.blockscout.com/tx/${transactionHash}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className={styles.link}
+                                            >
+                                                See the tx on Blockscout
+                                                Explorer
+                                            </a>
+                                        )}
+                                    </>
                                 )}
                         </div>
                     ))
