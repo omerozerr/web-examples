@@ -9,7 +9,7 @@ import abi from "./abi";
 import { parseEther, formatEther } from "viem";
 import styles from "./Profile.module.css"; // Import the CSS module
 
-const contractAddress = "0xC1e20a058Ab5A346Ee03C9296FA05aF7f8456556";
+const contractAddress = "0x12D1e124F8C2f20FE9b98CA91B9a51f71A8792E9";
 
 export default function Profile({ role }: { role: "client" | "developer" }) {
     const { open } = useWeb3Modal();
@@ -19,6 +19,7 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
     const [name, setName] = useState("");
     const [bio, setBio] = useState("");
     const [builderScore, setBuilderScore] = useState<number>(0); // Initialize as 0
+    const [telegramHandle, setTelegramHandle] = useState("");
 
     // New state variables for job offering
     const [jobTitle, setJobTitle] = useState("");
@@ -87,7 +88,8 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                 console.log(result);
                 setName(result[1]);
                 setBio(result[2]);
-                setIsRegistered(result[4]);
+                setTelegramHandle(result[4]);
+                setIsRegistered(result[5]);
             } else if (role === "client") {
                 const result = await readContract(config, {
                     abi,
@@ -96,7 +98,8 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                     args: [address],
                 });
                 console.log(result);
-                setIsRegistered(result[1]);
+                setTelegramHandle(result[1]);
+                setIsRegistered(result[2]);
             }
         } catch (error) {
             console.error("Error checking registration:", error);
@@ -109,8 +112,7 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                 abi,
                 address: contractAddress,
                 functionName: "registerDeveloper",
-                args: [name, bio, builderScore],
-                chainId: 11155111,
+                args: [name, bio, builderScore, telegramHandle],
             });
             setIsRegistered(true);
         } catch (error) {
@@ -124,11 +126,39 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                 abi,
                 address: contractAddress,
                 functionName: "registerClient",
-                chainId: 11155111,
+                args: [telegramHandle],
             });
             setIsRegistered(true);
         } catch (error) {
             console.error("Error registering client:", error);
+        }
+    };
+
+    const updateDeveloperProfile = async () => {
+        try {
+            const result = await writeContract(config, {
+                abi,
+                address: contractAddress,
+                functionName: "updateDeveloperProfile",
+                args: [name, bio, builderScore, telegramHandle],
+            });
+            console.log("Developer profile updated:", result);
+        } catch (error) {
+            console.error("Error updating developer profile:", error);
+        }
+    };
+
+    const updateClientProfile = async () => {
+        try {
+            const result = await writeContract(config, {
+                abi,
+                address: contractAddress,
+                functionName: "updateClientProfile",
+                args: [telegramHandle],
+            });
+            console.log("Client profile updated:", result);
+        } catch (error) {
+            console.error("Error updating client profile:", error);
         }
     };
 
@@ -143,13 +173,14 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                 address: contractAddress,
                 functionName: "createOffering",
                 args: [jobTitle, jobDescription, convertEtherToWei(jobPrice)],
+                chainId: 84532,
             });
             console.log("Job offering created:", result);
             fetchDeveloperOfferings();
             // Reset form
             setJobTitle("");
             setJobDescription("");
-            setJobPrice("0");
+            setJobPrice("");
         } catch (error) {
             console.error("Error creating job offering:", error);
         }
@@ -164,7 +195,6 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                 address: contractAddress,
                 functionName: "getDeveloperOfferings",
                 args: [address],
-                chainId: 11155111,
             });
             console.log(offeringIds);
 
@@ -175,7 +205,6 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                         address: contractAddress,
                         functionName: "offerings",
                         args: [id],
-                        chainId: 11155111,
                     });
                     return offering;
                 })
@@ -199,6 +228,40 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                             <div>Name: {name}</div>
                             <div>Bio: {bio}</div>
                             <div>Builder Score: {builderScore.toString()}</div>
+                            <div>Telegram Handle: {telegramHandle}</div>
+                        </div>
+                        <div className={styles["profile-section"]}>
+                            <h4>Edit Profile</h4>
+                            <input
+                                type="text"
+                                placeholder="Name"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                className={styles.input}
+                            />
+                            <input
+                                type="text"
+                                placeholder="Bio"
+                                value={bio}
+                                onChange={(e) => setBio(e.target.value)}
+                                className={styles.input}
+                            />
+                            <input
+                                type="text"
+                                placeholder="Telegram Handle"
+                                value={telegramHandle}
+                                onChange={(e) =>
+                                    setTelegramHandle(e.target.value)
+                                }
+                                className={styles.input}
+                            />
+
+                            <button
+                                onClick={updateDeveloperProfile}
+                                className={styles.button}
+                            >
+                                Update Profile
+                            </button>
                         </div>
                         <div className={styles["profile-section"]}>
                             <h4>Create Job Offering</h4>
@@ -257,6 +320,27 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                 ) : (
                     <div className={styles["profile-section"]}>
                         <h3>Client Profile</h3>
+                        <div>Connected Wallet Address: {address}</div>
+                        <div>Telegram Handle: {telegramHandle}</div>
+                        <div className={styles["profile-section"]}>
+                            <h4>Edit Profile</h4>
+                            <input
+                                type="text"
+                                placeholder="Telegram Handle"
+                                value={telegramHandle}
+                                onChange={(e) =>
+                                    setTelegramHandle(e.target.value)
+                                }
+                                className={styles.input}
+                            />
+
+                            <button
+                                onClick={updateClientProfile}
+                                className={styles.button}
+                            >
+                                Update Profile
+                            </button>
+                        </div>
                     </div>
                 )
             ) : isConnected ? (
@@ -278,6 +362,16 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                                 onChange={(e) => setBio(e.target.value)}
                                 className={styles.input}
                             />
+                            <input
+                                type="text"
+                                placeholder="Telegram Handle"
+                                value={telegramHandle}
+                                onChange={(e) =>
+                                    setTelegramHandle(e.target.value)
+                                }
+                                className={styles.input}
+                            />
+
                             <button
                                 onClick={registerDeveloper}
                                 className={styles.button}
@@ -288,6 +382,16 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                     ) : (
                         <div>
                             <h3>Register as Client</h3>
+                            <input
+                                type="text"
+                                placeholder="Telegram Handle"
+                                value={telegramHandle}
+                                onChange={(e) =>
+                                    setTelegramHandle(e.target.value)
+                                }
+                                className={styles.input}
+                            />
+
                             <button
                                 onClick={registerClient}
                                 className={styles.button}

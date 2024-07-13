@@ -8,8 +8,33 @@ export default [
                 name: "client",
                 type: "address",
             },
+            {
+                indexed: false,
+                internalType: "string",
+                name: "telegramHandle",
+                type: "string",
+            },
         ],
         name: "ClientRegistered",
+        type: "event",
+    },
+    {
+        anonymous: false,
+        inputs: [
+            {
+                indexed: true,
+                internalType: "address",
+                name: "client",
+                type: "address",
+            },
+            {
+                indexed: false,
+                internalType: "string",
+                name: "telegramHandle",
+                type: "string",
+            },
+        ],
+        name: "ClientUpdated",
         type: "event",
     },
     {
@@ -62,8 +87,51 @@ export default [
                 name: "builderScore",
                 type: "uint256",
             },
+            {
+                indexed: false,
+                internalType: "string",
+                name: "telegramHandle",
+                type: "string",
+            },
         ],
         name: "DeveloperRegistered",
+        type: "event",
+    },
+    {
+        anonymous: false,
+        inputs: [
+            {
+                indexed: true,
+                internalType: "address",
+                name: "developer",
+                type: "address",
+            },
+            {
+                indexed: false,
+                internalType: "string",
+                name: "name",
+                type: "string",
+            },
+            {
+                indexed: false,
+                internalType: "string",
+                name: "bio",
+                type: "string",
+            },
+            {
+                indexed: false,
+                internalType: "uint256",
+                name: "builderScore",
+                type: "uint256",
+            },
+            {
+                indexed: false,
+                internalType: "string",
+                name: "telegramHandle",
+                type: "string",
+            },
+        ],
+        name: "DeveloperUpdated",
         type: "event",
     },
     {
@@ -186,7 +254,13 @@ export default [
         type: "function",
     },
     {
-        inputs: [],
+        inputs: [
+            {
+                internalType: "string",
+                name: "_telegramHandle",
+                type: "string",
+            },
+        ],
         name: "registerClient",
         outputs: [],
         stateMutability: "nonpayable",
@@ -209,8 +283,54 @@ export default [
                 name: "_builderScore",
                 type: "uint8",
             },
+            {
+                internalType: "string",
+                name: "_telegramHandle",
+                type: "string",
+            },
         ],
         name: "registerDeveloper",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+    },
+    {
+        inputs: [
+            {
+                internalType: "string",
+                name: "_telegramHandle",
+                type: "string",
+            },
+        ],
+        name: "updateClientProfile",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+    },
+    {
+        inputs: [
+            {
+                internalType: "string",
+                name: "_name",
+                type: "string",
+            },
+            {
+                internalType: "string",
+                name: "_bio",
+                type: "string",
+            },
+            {
+                internalType: "uint8",
+                name: "_builderScore",
+                type: "uint8",
+            },
+            {
+                internalType: "string",
+                name: "_telegramHandle",
+                type: "string",
+            },
+        ],
+        name: "updateDeveloperProfile",
         outputs: [],
         stateMutability: "nonpayable",
         type: "function",
@@ -253,6 +373,11 @@ export default [
                 internalType: "address",
                 name: "addr",
                 type: "address",
+            },
+            {
+                internalType: "string",
+                name: "telegramHandle",
+                type: "string",
             },
             {
                 internalType: "bool",
@@ -316,6 +441,11 @@ export default [
                 internalType: "uint8",
                 name: "builderScore",
                 type: "uint8",
+            },
+            {
+                internalType: "string",
+                name: "telegramHandle",
+                type: "string",
             },
             {
                 internalType: "bool",

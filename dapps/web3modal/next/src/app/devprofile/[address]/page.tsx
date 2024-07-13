@@ -7,7 +7,7 @@ import { config } from "@/config";
 import abi from "@/components/abi";
 import { useAccount, useDisconnect } from "wagmi";
 
-const contractAddress = "0xC1e20a058Ab5A346Ee03C9296FA05aF7f8456556";
+const contractAddress = "0x12D1e124F8C2f20FE9b98CA91B9a51f71A8792E9";
 
 export default function DeveloperProfile() {
     const { address } = useParams();

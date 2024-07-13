@@ -9,7 +9,7 @@ import Link from "next/link";
 import { parseEther, formatEther } from "viem";
 import styles from "./Browse.module.css"; // Import the CSS module
 
-const contractAddress = "0xC1e20a058Ab5A346Ee03C9296FA05aF7f8456556";
+const contractAddress = "0x12D1e124F8C2f20FE9b98CA91B9a51f71A8792E9";
 
 export default function Browse() {
     const { address, isConnected } = useAccount();
@@ -58,11 +58,10 @@ export default function Browse() {
                 address: contractAddress,
                 functionName: "clients",
                 args: [address],
-                chainId: 11155111,
             });
             console.log(result);
 
-            setIsClient(result[1]);
+            setIsClient(result[2]);
         } catch (error) {
             console.error("Error checking client registration:", error);
         }
@@ -82,7 +81,6 @@ export default function Browse() {
                 functionName: "purchaseOffering",
                 args: [id],
                 value: price,
-                chainId: 11155111,
             });
             console.log("Offering purchased:", result);
             // Update offerings list or perform additional actions after purchase
