@@ -15,6 +15,9 @@ export default function Browse() {
     const { address, isConnected } = useAccount();
     const [offerings, setOfferings] = useState<any[]>([]);
     const [isClient, setIsClient] = useState(false);
+    const [builderScores, setBuilderScores] = useState<{
+        [key: string]: number;
+    }>({});
 
     // Function to convert Ether to Wei using viem
     const convertEtherToWei = (etherValue: string): bigint => {
@@ -36,6 +39,37 @@ export default function Browse() {
         checkClientRegistration();
         console.log(offerings);
     }, [address]);
+
+    useEffect(() => {
+        if (offerings.length > 0) {
+            fetchBuilderScores();
+        }
+    }, [offerings]);
+
+    const fetchBuilderScores = async () => {
+        const scores: { [key: string]: number } = {};
+        for (const offering of offerings) {
+            try {
+                const developer = offering.developer;
+                if (!scores[developer]) {
+                    const result = await readContract(config, {
+                        abi,
+                        address: contractAddress,
+                        functionName: "developers",
+                        args: [developer],
+                        chainId: 84532,
+                    });
+                    scores[developer] = result[3];
+                }
+            } catch (error) {
+                console.error(
+                    `Error fetching builder score for ${offering.developer}:`,
+                    error
+                );
+            }
+        }
+        setBuilderScores(scores);
+    };
 
     const fetchAllOfferings = async () => {
         try {
@@ -109,6 +143,16 @@ export default function Browse() {
                             <p>Price: {convertWeiToEther(offering.price)}</p>
                             <p>Status: {offering.status}</p>
                             <p>Builder: {offering.developer}</p>
+                            {builderScores[offering.developer] !==
+                                undefined && (
+                                <p>
+                                    Builder Score:{" "}
+                                    {builderScores[offering.developer]}
+                                </p>
+                            )}
+                            {offering.status === 1 || offering.status === 2 ? (
+                                <p>Client: {offering.client}</p>
+                            ) : null}
                             <Link
                                 className={styles.button}
                                 href={`/devprofile/${offering.developer}`}
