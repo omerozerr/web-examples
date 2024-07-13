@@ -77,6 +77,7 @@ export default function Browse() {
                 abi,
                 address: contractAddress,
                 functionName: "getAllOfferings",
+                chainId: 84532,
             });
             setOfferings(Array.from(allOfferings)); // Convert readonly array to mutable array
         } catch (error) {
