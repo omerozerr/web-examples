@@ -8,7 +8,7 @@ import abi from "@/components/abi";
 import styles from "./DeveloperProfile.module.css"; // Import the CSS module
 import { formatEther } from "viem";
 
-const contractAddress = "0x12D1e124F8C2f20FE9b98CA91B9a51f71A8792E9";
+const contractAddress = "0x9f874922ED78A4dCf7DfdD3a0A7CE636e8E7AC8f";
 
 export default function DeveloperProfile() {
     const { address } = useParams();
@@ -32,6 +32,7 @@ export default function DeveloperProfile() {
                 address: contractAddress,
                 functionName: "developers",
                 args: [developerAddress],
+                chainId: 8453,
             });
             console.log(result);
 
@@ -79,6 +80,7 @@ export default function DeveloperProfile() {
                 address: contractAddress,
                 functionName: "getDeveloperOfferings",
                 args: [developerAddress],
+                chainId: 8453,
             });
 
             const offeringDetails = await Promise.all(
@@ -88,6 +90,7 @@ export default function DeveloperProfile() {
                         address: contractAddress,
                         functionName: "offerings",
                         args: [id],
+                        chainId: 8453,
                     });
                     return offering;
                 })

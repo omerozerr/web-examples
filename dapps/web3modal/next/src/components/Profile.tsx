@@ -9,7 +9,7 @@ import abi from "./abi";
 import { parseEther, formatEther } from "viem";
 import styles from "./Profile.module.css"; // Import the CSS module
 
-const contractAddress = "0x12D1e124F8C2f20FE9b98CA91B9a51f71A8792E9";
+const contractAddress = "0x9f874922ED78A4dCf7DfdD3a0A7CE636e8E7AC8f";
 
 export default function Profile({ role }: { role: "client" | "developer" }) {
     const { open } = useWeb3Modal();
@@ -178,6 +178,7 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                 address: contractAddress,
                 functionName: "registerDeveloper",
                 args: [name, bio, builderScore, telegramHandle],
+                chainId: 8453,
             });
             setIsRegistered(true);
             setRegisterDevTxHash(result); // Capture transaction hash
@@ -193,6 +194,7 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                 address: contractAddress,
                 functionName: "registerClient",
                 args: [telegramHandle],
+                chainId: 8453,
             });
             setIsRegistered(true);
             setRegisterClientTxHash(result); // Capture transaction hash
@@ -208,6 +210,7 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                 address: contractAddress,
                 functionName: "updateDeveloperProfile",
                 args: [name, bio, builderScore, telegramHandle],
+                chainId: 8453,
             });
             console.log("Developer profile updated:", result);
             setUpdateDevTxHash(result); // Capture transaction hash
@@ -223,6 +226,7 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                 address: contractAddress,
                 functionName: "updateClientProfile",
                 args: [telegramHandle],
+                chainId: 8453,
             });
             console.log("Client profile updated:", result);
             setUpdateClientTxHash(result); // Capture transaction hash
@@ -242,7 +246,7 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                 address: contractAddress,
                 functionName: "createOffering",
                 args: [jobTitle, jobDescription, convertEtherToWei(jobPrice)],
-                chainId: 84532,
+                chainId: 8453,
             });
             console.log("Job offering created:", result);
             setCreateJobTxHash(result); // Capture transaction hash
@@ -294,7 +298,7 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                 address: contractAddress,
                 functionName: "markOfferingCompleted",
                 args: [id],
-                chainId: 84532, // Ensure the chain ID is set correctly for Base Sepolia
+                chainId: 8453,
             });
             console.log("Offering marked as completed:", result);
             fetchDeveloperOfferings(); // Refresh the offerings

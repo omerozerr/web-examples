@@ -9,7 +9,7 @@ import Link from "next/link";
 import { parseEther, formatEther } from "viem";
 import styles from "./Browse.module.css"; // Import the CSS module
 
-const contractAddress = "0x12D1e124F8C2f20FE9b98CA91B9a51f71A8792E9";
+const contractAddress = "0x9f874922ED78A4dCf7DfdD3a0A7CE636e8E7AC8f";
 
 export default function Browse() {
     const { address, isConnected } = useAccount();
@@ -72,7 +72,7 @@ export default function Browse() {
                         address: contractAddress,
                         functionName: "developers",
                         args: [developer],
-                        chainId: 84532,
+                        chainId: 8453,
                     });
                     scores[developer] = result[3];
                 }
@@ -92,7 +92,7 @@ export default function Browse() {
                 abi,
                 address: contractAddress,
                 functionName: "getAllOfferings",
-                chainId: 84532,
+                chainId: 8453,
             });
             setOfferings(Array.from(allOfferings)); // Convert readonly array to mutable array
         } catch (error) {
@@ -108,6 +108,7 @@ export default function Browse() {
                 address: contractAddress,
                 functionName: "clients",
                 args: [address],
+                chainId: 8453,
             });
             console.log(result);
 
@@ -131,6 +132,7 @@ export default function Browse() {
                 functionName: "purchaseOffering",
                 args: [id],
                 value: price,
+                chainId: 8453,
             });
             console.log("Offering purchased:", result);
             setTransactionHash(result); // Capture transaction hash
