@@ -140,7 +140,9 @@ export default function Browse() {
                         <div key={index} className={styles.offering}>
                             <h3>{offering.title}</h3>
                             <p>{offering.description}</p>
-                            <p>Price: {convertWeiToEther(offering.price)}</p>
+                            <p>
+                                Price: {convertWeiToEther(offering.price)} ETH
+                            </p>
                             <p>Status: {offering.status}</p>
                             <p>Builder: {offering.developer}</p>
                             {builderScores[offering.developer] !==

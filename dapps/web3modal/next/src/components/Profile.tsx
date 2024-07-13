@@ -299,7 +299,7 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                             />
                             <input
                                 type="text"
-                                placeholder="Job Price"
+                                placeholder="Job Price in ETH"
                                 value={jobPrice}
                                 onChange={(e) => setJobPrice(e.target.value)}
                                 className={styles.input}
@@ -323,7 +323,7 @@ export default function Profile({ role }: { role: "client" | "developer" }) {
                                         <p>Description: {offering[4]}</p>
                                         <p>
                                             Price:{" "}
-                                            {convertWeiToEther(offering[5])}
+                                            {convertWeiToEther(offering[5])} ETH
                                         </p>
                                         <p>Status: {offering[6]}</p>
                                         {offering[6] == 1 && (
